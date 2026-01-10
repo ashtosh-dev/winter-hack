@@ -273,5 +273,5 @@ st.divider()
 # Footer
 # -----------------------------
 st.caption(
-    "Ghost Demand Intelligence System • Backup Demo UI • Hackathon Submission"
+    "Ghost Demand Intelligence System"
 )
