@@ -47,8 +47,6 @@ Demo Video: `<Insert Google Drive demo video link here>`
 
 ## Google Technologies Used
 
-> ⚠️ Usage of Google products is mandatory for this hackathon.
-
 - **Google BigQuery**  
   Used as the centralized analytics warehouse to store processed demand data, ghost demand alerts, optimization outputs, and financial impact metrics. BigQuery enables scalable querying and seamless dashboard integration.
 
