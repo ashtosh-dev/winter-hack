@@ -116,7 +116,7 @@ streamlit run app.py
 
 ---
 
-## 📊 How it Works
+## How it Works
 
 1. **Data Ingestion**: Sales and forecast data are pulled from BigQuery.
 2. **Feature Engineering**: The system calculates rolling means, standard deviations, and volatility ratios to capture the "rhythm" of demand.
