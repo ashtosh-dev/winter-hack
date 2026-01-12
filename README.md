@@ -1,61 +1,102 @@
-# 🛡️ GHOST-SHIELD AI
+# 🛡️ Ghost-Shield AI
 
-**GHOST-SHIELD AI** is an intelligent supply-chain monitoring system designed to detect "Ghost Demand"—anomalous spikes in demand forecasts that don't translate to real sales—preventing invisible losses, reducing waste, and optimizing production costs.
+## Description
 
-## 🚀 Key Features
+Ghost-Shield AI is a decision-support system built to detect and mitigate **Ghost Demand** in retail and e-commerce supply chains.
 
-- **Anomaly Detection**: Uses **Isolation Forest** to identify abnormal demand patterns and forecast errors.
-- **Production Optimization**: Leverages **Google OR-Tools** to prescribe production cuts that minimize overproduction costs and waste.
-- **Interactive Dashboard**: A **Streamlit**-based cockpit for real-time monitoring of SKU-level alerts and global savings.
-- **Cloud scale**: Integrated with **Google BigQuery** for scalable data processing and storage.
-- **Explainability**: provides clear reasoning for every alert triggered (volatility, forecast spikes, etc.).
+Ghost Demand refers to demand signals that are **real in data but false in intent**. These spikes often occur during flash sales, influencer-driven trends, or promotional campaigns. Traditional forecasting systems treat these spikes as long-term demand, causing businesses to overproduce.
 
-## 🛠️ Tech Stack
+The result:
+- Excess inventory
+- Heavy discounting
+- Warehousing costs
+- Product waste
+- Capital lock-up
 
-- **Frontend**: Streamlit
-- **Machine Learning**: Scikit-learn (Isolation Forest)
-- **Mathematical Optimization**: Google OR-Tools (Linear Programming)
-- **Data Warehousing**: Google BigQuery
-- **Data Engineering**: Pandas, NumPy
-- **Visualization**: Plotly Express
+Ghost-Shield AI identifies such misleading demand patterns early and converts them into **actionable production recommendations**, helping organizations reduce costs and waste while improving operational efficiency.
 
-## 📂 Project Structure
+---
 
-```text
-├── app.py              # Main Streamlit Dashboard
-├── src/                # Core Logic Modules
-│   ├── ml_model.py      # Ghost demand detection (Isolation Forest)
-│   ├── optimization.py  # Production cut optimization (OR-Tools)
-│   ├── explainability.py # Alert reasoning logic
-│   ├── feature_engineering.py # Rolling stats and volatility metrics
-│   └── data_cleaning.py  # Data preprocessing
-├── notebooks/          # Exploratory Data Analysis & Research
-├── data/               # Local data assets
-├── requirements.txt    # Project dependencies
-└── .env                # Environment variables
+## 🎥 Demo Video Link
+
+Demo Video: `<Insert Google Drive demo video link here>`
+
+---
+
+## Features
+
+- Detects abnormal demand spikes using unsupervised machine learning  
+- Identifies ghost demand at SKU–day level granularity  
+- Recommends optimal production cuts using mathematical optimization  
+- Estimates production cost savings and waste reduction  
+- Provides business-ready dashboards for decision makers  
+
+---
+
+## Tech Stack
+
+- Python  
+- Pandas & NumPy  
+- Scikit-learn (Isolation Forest)  
+- Google OR-Tools  
+- Google BigQuery  
+- Looker Studio  
+- Streamlit (internal exploratory UI)  
+
+---
+
+## Google Technologies Used
+
+> ⚠️ Usage of Google products is mandatory for this hackathon.
+
+- **Google BigQuery**  
+  Used as the centralized analytics warehouse to store processed demand data, ghost demand alerts, optimization outputs, and financial impact metrics. BigQuery enables scalable querying and seamless dashboard integration.
+
+- **Looker Studio**  
+  Used to build interactive dashboards that visualize ghost demand alerts, SKU-level savings, and overall business impact for judges and stakeholders.
+
+- **Google OR-Tools**  
+  Used to solve constrained optimization problems that translate machine learning insights into optimal production decisions.
+
+---
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/satyarao08/WinterHackathon-PixelPirates
+cd WinterHackathon-PixelPirates
 ```
 
-## ⚙️ Setup & Installation
+### 2. Install Dependencies
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/ashtosh-dev/winter-hack.git
-   cd winter-hack
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-2. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 3. Set up Google Cloud Credentials
 
-3. **Configure Environment**
-   - Create a `.env` file or set environment variables for Google Cloud credentials.
-   - Ensure you have a service account JSON with access to BigQuery.
+- Create a service account in Google Cloud Console with access to BigQuery.
+- Download the service account key JSON file.
+- Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path of the JSON file.
 
-4. **Run the Application**
-   ```bash
-   streamlit run app.py
-   ```
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="path/to/your/service-account-key.json"
+```
+
+### 4. Run the Application
+
+```bash
+cd src
+python main.py
+```
+
+```bash
+streamlit run app.py
+```
+
+---
 
 ## 📊 How it Works
 
@@ -66,4 +107,10 @@
 5. **Visualization**: All metrics are aggregated into the dashboard for executive and operational review.
 
 ---
-*Developed during Winter Hackathon.*
+
+## Team Members
+- Satyashree G Rao
+- Ashutosh Shenoy
+
+
+
