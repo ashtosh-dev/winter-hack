@@ -91,6 +91,7 @@ python main.py
 ```
 
 ```bash
+cd..
 streamlit run app.py
 ```
 
