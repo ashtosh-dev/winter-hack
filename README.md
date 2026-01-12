@@ -1,45 +1,69 @@
-# Ghost Demand Detection
+# 🛡️ GHOST-SHIELD AI
 
-This project focuses on identifying "Ghost Demand" (anomalous demand patterns) in e-commerce sales data using machine learning techniques.
+**GHOST-SHIELD AI** is an intelligent supply-chain monitoring system designed to detect "Ghost Demand"—anomalous spikes in demand forecasts that don't translate to real sales—preventing invisible losses, reducing waste, and optimizing production costs.
 
-## Overview
+## 🚀 Key Features
 
-The primary goal is to perform anomaly detection on sales records to identify unusual fluctuations in demand that might indicate supply chain issues, data errors, or significant market shifts.
+- **Anomaly Detection**: Uses **Isolation Forest** to identify abnormal demand patterns and forecast errors.
+- **Production Optimization**: Leverages **Google OR-Tools** to prescribe production cuts that minimize overproduction costs and waste.
+- **Interactive Dashboard**: A **Streamlit**-based cockpit for real-time monitoring of SKU-level alerts and global savings.
+- **Cloud scale**: Integrated with **Google BigQuery** for scalable data processing and storage.
+- **Explainability**: provides clear reasoning for every alert triggered (volatility, forecast spikes, etc.).
 
-## Data Source
+## 🛠️ Tech Stack
 
-The project utilizes the `Amazon Sale Report.csv` dataset, which contains detailed transaction records, including:
-- Order IDs
-- Dates
-- SKU details
-- Quantities
-- Order Status
+- **Frontend**: Streamlit
+- **Machine Learning**: Scikit-learn (Isolation Forest)
+- **Mathematical Optimization**: Google OR-Tools (Linear Programming)
+- **Data Warehousing**: Google BigQuery
+- **Data Engineering**: Pandas, NumPy
+- **Visualization**: Plotly Express
 
-## Notebooks
+## 📂 Project Structure
 
-The core analysis and modeling are performed in the following notebook:
-
-### [01_data_exploration.ipynb](notebooks/01_data_exploration.ipynb)
-- **Data Loading & Cleaning**: Initial ingestion of the Amazon sales report and basic preprocessing.
-- **Aggregation**: Converting order-level data into daily SKU-level demand time series.
-- **Feature Engineering**: Creating rolling averages, standard deviations, and volatility ratios to capture demand patterns.
-- **Anomaly Detection**: Training an **Isolation Forest** model to detect outliers in the demand signal.
-- **Visualization**: Detailed plots and statistical summaries of detected anomalies.
-
-## Getting Started
-
-### Prerequisites
-
-Ensure you have Python installed and the required dependencies:
-
-```bash
-pip install -r requirements.txt
+```text
+├── app.py              # Main Streamlit Dashboard
+├── src/                # Core Logic Modules
+│   ├── ml_model.py      # Ghost demand detection (Isolation Forest)
+│   ├── optimization.py  # Production cut optimization (OR-Tools)
+│   ├── explainability.py # Alert reasoning logic
+│   ├── feature_engineering.py # Rolling stats and volatility metrics
+│   └── data_cleaning.py  # Data preprocessing
+├── notebooks/          # Exploratory Data Analysis & Research
+├── data/               # Local data assets
+├── requirements.txt    # Project dependencies
+└── .env                # Environment variables
 ```
 
-### Running the Project
+## ⚙️ Setup & Installation
 
-Open the Jupyter notebook to explore the analysis:
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/ashtosh-dev/winter-hack.git
+   cd winter-hack
+   ```
 
-```bash
-jupyter notebook notebooks/01_data_exploration.ipynb
-```
+2. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure Environment**
+   - Create a `.env` file or set environment variables for Google Cloud credentials.
+   - Ensure you have a service account JSON with access to BigQuery.
+
+4. **Run the Application**
+   ```bash
+   streamlit run app.py
+   ```
+
+## 📊 How it Works
+
+1. **Data Ingestion**: Sales and forecast data are pulled from BigQuery.
+2. **Feature Engineering**: The system calculates rolling means, standard deviations, and volatility ratios to capture the "rhythm" of demand.
+3. **Detection**: The `ml_model` identifies records where the forecast deviates significantly from historical patterns without corresponding sales support.
+4. **Optimization**: For every "Ghost" case, the `optimization` engine calculates the most cost-effective production reduction.
+5. **Visualization**: All metrics are aggregated into the dashboard for executive and operational review.
+
+---
+*Developed during Winter Hackathon.*
