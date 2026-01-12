@@ -110,7 +110,7 @@ python main.py
 ```
 
 ```bash
-cd..
+cd ..
 streamlit run app.py
 ```
 
