@@ -47,15 +47,34 @@ Demo Video: `<Insert Google Drive demo video link here>`
 
 ## Google Technologies Used
 
+### Tools Used
+- Google BigQuery
+- Looker Studio
+- Google OR-Tools
+- Antigravity IDE
+- Gemini API
+
+### Why We Chose These Google Technologies
+
 - **Google BigQuery**  
-  Used as the centralized analytics warehouse to store processed demand data, ghost demand alerts, optimization outputs, and financial impact metrics. BigQuery enables scalable querying and seamless dashboard integration.
+  Used as the central analytics warehouse to store processed demand data, ghost demand alerts, and optimization outputs.  
+  BigQuery allows fast, scalable SQL-based analysis over large datasets and serves as the backend for dashboards without requiring additional infrastructure.
 
 - **Looker Studio**  
-  Used to build interactive dashboards that visualize ghost demand alerts, SKU-level savings, and overall business impact for judges and stakeholders.
+  Used to build interactive dashboards directly connected to BigQuery.  
+  This enables judges and stakeholders to explore ghost demand cases, SKU-level savings, and overall business impact in real time without running code.
 
 - **Google OR-Tools**  
-  Used to solve constrained optimization problems that translate machine learning insights into optimal production decisions.
+  Used to solve constrained optimization problems that convert ML-detected ghost demand into optimal production cut recommendations.  
+  This ensures the solution goes beyond detection and delivers actionable, cost-minimizing decisions.
 
+- **Antigravity IDE**  
+  Used to write and run the code.  
+  This ensures the solution goes beyond detection and delivers actionable, cost-minimizing decisions.
+
+- **Gemini API**  
+  To explain the final output of the code.
+  
 ---
 
 ## Setup Instructions
