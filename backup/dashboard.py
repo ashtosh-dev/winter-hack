@@ -17,7 +17,7 @@ st.set_page_config(
 @st.cache_data(show_spinner=True)
 def load_data():
     df = pd.read_csv(
-        "outputs/final_results.csv",
+        "../backup/outputs/final_results.csv",
         parse_dates=["Date"]
     )
     return df
