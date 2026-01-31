@@ -17,11 +17,6 @@ Ghost-Shield AI identifies such misleading demand patterns early and converts th
 
 ---
 
-## 🎥 Demo Video Link
-
-Demo Video: `<Insert Google Drive demo video link here>`
-
----
 
 ## Features
 

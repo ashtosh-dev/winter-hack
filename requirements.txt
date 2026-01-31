@@ -10,3 +10,4 @@ plotly
 matplotlib
 seaborn
 google-genai
+python-dotenv
