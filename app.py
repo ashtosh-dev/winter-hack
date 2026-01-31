@@ -149,8 +149,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from src.ml_model import load_ghost_model, detect_ghost_demand
-
 # --------------------------------------------------
 # Page Config
 # --------------------------------------------------
@@ -161,11 +159,11 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# Load Data (LOCAL ONLY — STREAMLIT SAFE)
+# Load Precomputed Ghost Demand Results
 # --------------------------------------------------
 @st.cache_data(show_spinner=True)
 def load_data():
-    df = pd.read_csv("data/Amazon Sale Report.csv")
+    df = pd.read_csv("data/ghost_demand_results.csv")
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
     return df
 
@@ -184,41 +182,38 @@ def main():
     try:
         df = load_data()
     except Exception as e:
-        st.error(f"Failed to load data: {e}")
+        st.error(f"Failed to load ghost demand data: {e}")
         return
 
-
-    # ---------- Load Model ----------
-    model = load_ghost_model("ghost_demand_model.pkl")
-
-    # ---------- Detect Ghost Demand ----------
-    ghost_df = detect_ghost_demand(df, model)
-
-    if ghost_df.empty:
-        st.warning("No ghost demand detected in this dataset.")
+    if df.empty:
+        st.warning("No ghost demand records available.")
         return
 
     # ---------- GLOBAL METRICS ----------
-    total_cases = ghost_df.shape[0]
-    total_sales = ghost_df["daily_sales"].sum()
+    total_cases = df.shape[0]
+    total_units = int(df["daily_sales"].sum())
 
     c1, c2 = st.columns(2)
     c1.metric("🚨 Ghost Demand Cases", total_cases)
-    c2.metric("📦 Units Affected", int(total_sales))
+    c2.metric("📦 Units Affected", total_units)
 
     st.divider()
 
     # ---------- SIDEBAR FILTER ----------
     st.sidebar.header("Product Filters")
-    all_skus = sorted(ghost_df["SKU"].unique())
 
+    all_skus = sorted(df["SKU"].unique())
     selected_skus = st.sidebar.multiselect(
         "Select SKUs",
         options=all_skus,
         default=all_skus[:3]
     )
 
-    filtered_df = ghost_df[ghost_df["SKU"].isin(selected_skus)]
+    filtered_df = df[df["SKU"].isin(selected_skus)]
+
+    if filtered_df.empty:
+        st.warning("No records for selected SKUs.")
+        return
 
     # ---------- CHART ----------
     st.subheader("📊 Ghost Demand by SKU")
@@ -234,8 +229,8 @@ def main():
         sku_counts,
         x="SKU",
         y="ghost_cases",
-        template="plotly_dark",
-        labels={"ghost_cases": "Ghost Demand Alerts"}
+        labels={"ghost_cases": "Ghost Demand Alerts"},
+        template="plotly_dark"
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -275,3 +270,4 @@ def main():
 # --------------------------------------------------
 if __name__ == "__main__":
     main()
+
