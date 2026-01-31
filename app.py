@@ -149,7 +149,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from src.feature_engineering import add_time_series_features
 from src.ml_model import load_ghost_model, detect_ghost_demand
 
 # --------------------------------------------------
