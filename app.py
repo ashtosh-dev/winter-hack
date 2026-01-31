@@ -187,8 +187,6 @@ def main():
         st.error(f"Failed to load data: {e}")
         return
 
-    # ---------- Feature Engineering ----------
-    df = add_time_series_features(df)
 
     # ---------- Load Model ----------
     model = load_ghost_model("ghost_demand_model.pkl")
