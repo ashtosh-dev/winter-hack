@@ -145,72 +145,136 @@
 # if __name__ == "__main__":
 #     main()
 
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from src.data_cleaning import load_data
 from src.feature_engineering import add_time_series_features
 from src.ml_model import load_ghost_model, detect_ghost_demand
 
-
+# --------------------------------------------------
+# Page Config
+# --------------------------------------------------
 st.set_page_config(
     page_title="GHOST-SHIELD AI",
     layout="wide",
     page_icon="🛡️"
 )
 
-
-@st.cache_resource
-def get_model():
-    return load_ghost_model()
-
-
-@st.cache_data
-def get_data():
-    df = load_data()
-    return add_time_series_features(df)
+# --------------------------------------------------
+# Load Data (LOCAL ONLY — STREAMLIT SAFE)
+# --------------------------------------------------
+@st.cache_data(show_spinner=True)
+def load_data():
+    df = pd.read_csv("data/Amazon Sale Report.csv")
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    return df
 
 
+# --------------------------------------------------
+# Main App
+# --------------------------------------------------
 def main():
     st.title("🛡️ GHOST-SHIELD AI")
     st.caption(
-        "Detecting Ghost Demand and preventing invisible supply-chain losses using ML + Optimization"
+        "Detecting ghost demand and preventing invisible supply-chain losses using ML"
     )
     st.divider()
 
-    model = get_model()
-    df = get_data()
+    # ---------- Load ----------
+    try:
+        df = load_data()
+    except Exception as e:
+        st.error(f"Failed to load data: {e}")
+        return
+
+    # ---------- Feature Engineering ----------
+    df = add_time_series_features(df)
+
+    # ---------- Load Model ----------
+    model = load_ghost_model("ghost_demand_model.pkl")
+
+    # ---------- Detect Ghost Demand ----------
     ghost_df = detect_ghost_demand(df, model)
 
-    ghost_cases = ghost_df.shape[0]
-    total_cost_saved = ghost_cases * 10000  # placeholder
-    total_waste_saved = ghost_cases * 5000
-    total_savings = total_cost_saved + total_waste_saved
+    if ghost_df.empty:
+        st.warning("No ghost demand detected in this dataset.")
+        return
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("💰 Estimated Savings", f"₹{total_savings:,.0f}")
-    c2.metric("🏭 Cost Saved", f"₹{total_cost_saved:,.0f}")
-    c3.metric("♻️ Waste Reduced", f"₹{total_waste_saved:,.0f}")
-    c4.metric("🚨 Ghost Demand Alerts", ghost_cases)
+    # ---------- GLOBAL METRICS ----------
+    total_cases = ghost_df.shape[0]
+    total_sales = ghost_df["daily_sales"].sum()
+
+    c1, c2 = st.columns(2)
+    c1.metric("🚨 Ghost Demand Cases", total_cases)
+    c2.metric("📦 Units Affected", int(total_sales))
 
     st.divider()
 
-    st.subheader("📄 Ghost Demand Cases")
-    st.dataframe(
-        ghost_df[["Date", "SKU", "daily_sales"]].head(20),
-        use_container_width=True,
+    # ---------- SIDEBAR FILTER ----------
+    st.sidebar.header("Product Filters")
+    all_skus = sorted(ghost_df["SKU"].unique())
+
+    selected_skus = st.sidebar.multiselect(
+        "Select SKUs",
+        options=all_skus,
+        default=all_skus[:3]
     )
 
+    filtered_df = ghost_df[ghost_df["SKU"].isin(selected_skus)]
+
+    # ---------- CHART ----------
+    st.subheader("📊 Ghost Demand by SKU")
+
+    sku_counts = (
+        filtered_df.groupby("SKU")
+        .size()
+        .reset_index(name="ghost_cases")
+        .sort_values("ghost_cases", ascending=False)
+    )
+
+    fig = px.bar(
+        sku_counts,
+        x="SKU",
+        y="ghost_cases",
+        template="plotly_dark",
+        labels={"ghost_cases": "Ghost Demand Alerts"}
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ---------- EXPLAINABILITY ----------
     st.divider()
     st.subheader("🔍 Why These Alerts Were Triggered")
+
     st.markdown("""
-    - Abnormal demand patterns detected by Isolation Forest
-    - High short-term volatility compared to historical demand
-    - Offline optimization models suggested corrective actions
+    - Sudden demand spikes not backed by historical sales  
+    - High short-term volatility compared to rolling averages  
+    - Forecast error diverging from realized demand  
+    - Isolation Forest detected abnormal demand patterns  
     """)
 
+    # ---------- DATA TABLE ----------
+    st.divider()
+    st.subheader("📄 Ghost Demand Records")
 
+    st.dataframe(
+        filtered_df[
+            [
+                "Date",
+                "SKU",
+                "daily_sales",
+                "forecast_error",
+                "volatility_ratio",
+                "ghost_demand"
+            ]
+        ].head(25),
+        use_container_width=True
+    )
+
+
+# --------------------------------------------------
+# Run
+# --------------------------------------------------
 if __name__ == "__main__":
     main()
